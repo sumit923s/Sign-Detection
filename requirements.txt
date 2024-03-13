@@ -2,6 +2,6 @@ Flask
 opencv-python
 numpy
 Gunicorn
-Tensorflow 1.x
+Tensorflow
 Mediapipe
 keras
