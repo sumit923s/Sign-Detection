@@ -4,11 +4,11 @@ import mediapipe as mp
 import tensorflow as tf
 
 # Load the gesture recognizer model
-model = tf.saved_model.load('mp_hand_gesture', tags=['serve'])  # Path to the directory containing the SavedModel
+model = tf.keras.models.load_model('mp_hand_gesture')  # Path to the directory containing the SavedModel
 
 # Load class names
 with open('gesture.names', 'r') as f:
-    classNames = f.read().split('\n')
+    classNames = [line.strip() for line in f.readlines()]
 
 # Initialize mediapipe
 mpHands = mp.solutions.hands
@@ -33,7 +33,7 @@ def detect_gesture(frame):
 
             mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
 
-            prediction = model.signatures['serving_default'](tf.constant(landmarks, dtype=tf.float32))['dense']  # Perform inference
+            prediction = model.predict(np.array([landmarks]))  # Convert to numpy array
             classID = np.argmax(prediction)
             className = classNames[classID]
 
